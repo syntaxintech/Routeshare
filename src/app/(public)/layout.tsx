@@ -7,7 +7,7 @@ export default function PublicLayout({
 }) {
   return (
     <div>
-      <nav className="my-7 mx-16">
+      <nav>
         <Navbar />
       </nav>
       <div>{children}</div>
