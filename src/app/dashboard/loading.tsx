@@ -1,0 +1,13 @@
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+
+export default function loadingPage() {
+  return (
+    <div className="flex flex-col justify-center items-center h-screen gap-4">
+      <Button disabled size="sm">
+        <Spinner data-icon="inline-start" />
+        Loading...
+      </Button>
+    </div>
+  );
+}

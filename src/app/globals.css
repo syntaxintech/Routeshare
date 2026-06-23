@@ -46,6 +46,9 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Create a custom utility variable for Poppins */
+  --font-heading: var(--font-poppins), sans-serif;
 }
 
 :root {
@@ -125,6 +128,7 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-sans;
+    /* Sets the universal body text to Manrope */
+    font-family: var(--font-poppins), sans-serif;
   }
 }
