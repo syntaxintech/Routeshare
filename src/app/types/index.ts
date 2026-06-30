@@ -1,4 +1,4 @@
-interface Route {
+export interface Route {
   id: string;
   title: string;
   createdBy: string;

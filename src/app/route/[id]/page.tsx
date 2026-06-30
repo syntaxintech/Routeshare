@@ -1,51 +1,44 @@
+import RouteMapView from "@/components/RouteMapView";
+import { getRouteById } from "@/lib/mock-data";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
 interface RouteParamsProp {
   params: Promise<{ id: string }>;
 }
-// Testing the loading state by delaying with setTimeout
-// async function PromisedRequest() {
-//   await new Promise((resolve) => setTimeout(resolve, 2000));
 
-//   return {
-//     status: {
-//       user: 1000,
-//     },
-//   };
-// }
 export async function generateMetadata(
   { params }: RouteParamsProp,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { id } = await params;
+  const routeData = await getRouteById(id);
 
   return {
-    title: `Route: ${id} - Routeshare`,
+    title: routeData ? `${routeData?.title} - RouteShare` : "Route Not Found",
     openGraph: {
-      title: `Route: ${id}`,
-      description: "Follow this shared route",
+      title: routeData?.title || "Route Not Found",
+      description: `Follow this shared route on RouteShare`,
     },
   };
 }
 
 async function RouteParamsPage({ params }: RouteParamsProp) {
   const { id } = await params;
+  const routeData = await getRouteById(id);
   // const data = await PromisedRequest();
 
-  if (id === "test-not-found") {
+  if (routeData === null) {
     notFound();
-  } else {
-    return (
-      <div>
-        Viewing shared route: {id}
-        <div className="w-full h-96 bg-slate-100 rounded-lg flex items-center justify-center">
-          Map will appear here with
-          {/* data: {data.status.user} */}
-        </div>
-      </div>
-    );
   }
+  return (
+    <div>
+      <p>{routeData?.title}</p>
+      <RouteMapView route={routeData} />
+      <p>Created by: {routeData?.createdBy}</p>
+      <p>Created: {routeData?.createdAt.toDateString()}</p>
+    </div>
+  );
 }
 
 export default RouteParamsPage;

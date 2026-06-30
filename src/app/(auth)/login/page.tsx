@@ -1,51 +1,41 @@
-import { Button } from "@/components/ui/button";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+"use client";
+
+import { FormProvider, useForm } from "react-hook-form";
+import LoginUI from "./LoginUI";
+import { loginSchema, LoginSchema } from "./controller/LoginSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { LoginAction } from "@/app/auth/actions";
 
 export default function AuthLoginPage() {
+  const [showError, setShowError] = useState(false);
+  const router = useRouter();
+  const methods = useForm<LoginSchema>({
+    mode: "all",
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const handleSubmit = async (data: LoginSchema) => {
+    const response = await LoginAction(data);
+
+    if (response.success) {
+      alert("Login successfully");
+      router.push("/dashboard");
+    } else {
+      setShowError((prev) => !prev);
+    }
+  };
   return (
-    <div>
-      <div className="min-h-screen flex flex-col items-center justify-center">
-        <Card className="w-full max-w-[500px] p-6">
-          <h1 className="text-xl text-center">Login</h1>
-          <FieldGroup>
-            <Field>
-              <FieldLabel className="text-[17px]" htmlFor="fieldgroup-name">
-                Name
-              </FieldLabel>
-              <Input
-                id="fieldgroup-name"
-                className="py-5 text-[17px]"
-                placeholder="Jordan Lee"
-              />
-            </Field>
-            <Field>
-              <FieldLabel className="text-[17px]" htmlFor="fieldgroup-email">
-                Email
-              </FieldLabel>
-              <Input
-                id="fieldgroup-email"
-                type="email"
-                className="py-5 text-[17px]"
-                placeholder="name@example.com"
-              />
-            </Field>
-            <Field orientation="horizontal">
-              <Button
-                className="py-5 px-7 text-[17px]"
-                type="reset"
-                variant="outline"
-              >
-                Cancel
-              </Button>
-              <Button className="py-5 px-7 text-[17px]" type="submit">
-                Submit
-              </Button>
-            </Field>
-          </FieldGroup>
-        </Card>
+    <FormProvider {...methods}>
+      <div>
+        <LoginUI loginForm={handleSubmit} showError={showError} />
       </div>
-    </div>
+    </FormProvider>
   );
 }

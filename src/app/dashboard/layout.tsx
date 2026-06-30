@@ -1,12 +1,14 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import { SignOutAction } from "../auth/actions";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   return (
-    <div className="flex h-screen w-full border-4 border-red-500">
+    <div className="flex h-screen w-full border-4">
       <div className="w-64 border-r flex flex-col justify-between">
         <div className="p-5">
           <h1 className="text-xl uppercase">Routeshare</h1>
@@ -36,10 +38,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </Link>
           </ul>
         </div>
+
+        <form action={SignOutAction} className="pl-5 py-16">
+          <Button type="submit" variant="secondary">
+            Sign Out
+          </Button>
+        </form>
       </div>
-      <div className="flex-1 overflow-auto border-4 border-blue-500">
-        {children}
-      </div>
+      <div className="flex-1 overflow-auto p-5 mt-15 md:p-10">{children}</div>
     </div>
   );
 }
